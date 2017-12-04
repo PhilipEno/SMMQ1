@@ -6,6 +6,7 @@
       var tag = document.createElement('script');
       var event0;
       var randomstart;
+      var timeoutcounter;
 
       tag.src = "https://www.youtube.com/iframe_api";
       var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -27,10 +28,10 @@
         //var videolength = event0.target.getDuration():
         randomstart = Math.floor((Math.random() * 120) + 20);
         event0.target.seekTo(randomstart);
-        setTimeout(reachedEnd, 3000);
+        starttimer();
       }
       
-      function go(){
+      function go() {
       	document.getElementById('button0').style.visibility = 'hidden';
         document.getElementById('button1').style.visibility = 'visible';
         
@@ -42,11 +43,7 @@
         if (temprand==3) url = 'rP7r12Rg490';
         if (temprand==4) url = '44wDwMQVqCc';
         if (temprand==5) url = 'f7MbmXklj3Q';
-        
-        
-        
-        
-        
+   
         player = new YT.Player('player', {
           height: '390',
           width: '640',
@@ -68,7 +65,8 @@
         });
       }
       
-      function answer(){
+      function answer() {
+      	stoptimer();
       	player.stopVideo();
       	player.destroy();
         document.getElementById('button0').style.visibility = 'visible';
@@ -82,9 +80,18 @@
           //done = true;
         }
       }
+      
+      function starttimer() {
+      	timeoutcounter = setTimeout(reachedEnd, 3000);
+      }
+      
+      function stoptimer() {
+      	clearTimeout(timeoutcounter);
+      }
+      
       function reachedEnd() {
       	event0.target.seekTo(randomstart);
-        setTimeout(reachedEnd, 3000);
+        starttimer();
         //player.stopVideo();
       }
     </script>
@@ -109,6 +116,10 @@
    
   
 
+
+    
+    
+    
     
     
     
