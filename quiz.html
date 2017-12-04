@@ -3,7 +3,6 @@
   <body>
   <script>
       var tag = document.createElement('script');
-      var event0;
       var randomseekto;
       var looptimer;
       var pausetimer;
@@ -28,11 +27,10 @@
       }
       
       function onPlayerReady(event) {
-        event0 = event;
-        event0.target.playVideo();
+        mediaplayer.playVideo();
         //var videolength = event0.target.getDuration():
         randomseekto = Math.floor((Math.random() * 120) + 20);
-        event0.target.seekTo(randomseekto);
+        mediaplayer.seekTo(randomseekto);
         startLoopTimer();
       }
       
@@ -143,12 +141,12 @@
             }
         }   	
         if (tag0found && tag1found){
-        	pausetimer = setTimeout(afterMath, 2000);
+        	pausetimer = setTimeout(reachedPauseEnd, 2000);
             document.getElementById("yougotit").style.visibility = "visible";
         }
       }
       
-      function afterMath() {
+      function reachedPauseEnd() {
       	endPuzzle();
         newPuzzle();
       }
@@ -160,7 +158,7 @@
       }
       
       function startLoopTimer() {
-      	looptimer = setTimeout(reachedLoopEnd, 10000);
+      	looptimer = setTimeout(reachedLoopEnd, 5000);
       }
       
       function stopTimers() {
@@ -169,7 +167,7 @@
       }
       
       function reachedLoopEnd() {
-      	event0.target.seekTo(randomstart);
+      	mediaplayer.seekTo(randomseekto);
         startLoopTimer();
         //player.stopVideo();
       }
