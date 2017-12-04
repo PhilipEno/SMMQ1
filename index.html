@@ -7,21 +7,17 @@
       var event0;
       var randomstart;
       var timeoutcounter;
-
       tag.src = "https://www.youtube.com/iframe_api";
       var firstScriptTag = document.getElementsByTagName('script')[0];
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
 	  window.onload = function(){
       	document.getElementById("button1").style.visibility = "hidden"; 
+        document.getElementById('textarea0').style.visibility = 'hidden';
       };
-
       var player;
       function onYouTubeIframeAPIReady() {
       	
       }
-
-
       function onPlayerReady(event) {
         event0 = event;
         event0.target.playVideo();
@@ -31,9 +27,10 @@
         starttimer();
       }
       
-      function go() {
+      function start() {
       	document.getElementById('button0').style.visibility = 'hidden';
         document.getElementById('button1').style.visibility = 'visible';
+        document.getElementById('textarea0').style.visibility = 'visible';
         
       	var url; 
         var temprand = Math.floor((Math.random() * 7) + 0);
@@ -67,16 +64,17 @@
         });
       }
       
-      function answer() {
+      function goback() {
       	stoptimer();
       	player.stopVideo();
       	player.destroy();
         document.getElementById('button0').style.visibility = 'visible';
         document.getElementById('button1').style.visibility = 'hidden';
+        document.getElementById('textarea0').style.visibility = 'hidden';
       }
       
       function starttimer() {
-      	timeoutcounter = setTimeout(reachedEnd, 3000);
+      	timeoutcounter = setTimeout(reachedEnd, 5000);
       }
       
       function stoptimer() {
@@ -105,9 +103,12 @@
 	<p>1234</p>
 
     
-    <p><button id="button0" onclick="go()">START</button></p>
+    <p><button id="button0" onclick="start()">START</button></p>
     <p><div id="player"></div></p>
-    <p><button id="button1" onclick="answer()">ANSWER</button></p>
+    <p><button id="button1" onclick="goback()">GO BACK</button></p>
+    
+    <p><textarea rows="4" cols="50" id="textarea0">text</textarea></p>
+    
     
     </div>
    
