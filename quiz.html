@@ -1,1 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <body>
+  <script>
+      
+      var tag = document.createElement('script');
+      var event0;
+      var randomstart;
+      var timeoutcounter;
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+	  var mediaplayer;
+      
 
+      
+      
+      
+      window.onload = function(){
+        start();
+      };
+      
+      function onYouTubeIframeAPIReady() {
+      }
+      
+      function onPlayerReady(event) {
+        event0 = event;
+        event0.target.playVideo();
+        //var videolength = event0.target.getDuration():
+        randomstart = Math.floor((Math.random() * 120) + 20);
+        event0.target.seekTo(randomstart);
+        starttimer();
+      }
+      
+      function start() {
+      	var url; 
+        var temprand = Math.floor((Math.random() * 7) + 0);
+        if (temprand==0) url = 'sjCw3-YTffo';
+        if (temprand==1) url = 'hdVtdVpoNjk';
+        if (temprand==2) url = '9vlNdfSyi-8';
+        if (temprand==3) url = 'rP7r12Rg490';
+        if (temprand==4) url = '44wDwMQVqCc';
+        if (temprand==5) url = 'f7MbmXklj3Q';
+        if (temprand==6) url = 'tPnK39ax_AM';
+      
+        mediaplayer = new YT.Player('mediaplayer', {
+          height: '390',
+          width: '640',
+          videoId: url,	
+          playerVars: {
+          	autoplay: 0,
+          	controls: 0,
+          	disablekb: 1,
+          	hl: 'ru-ru',
+          	loop: 0,
+          	showinfo: 0,
+          	autohide: 1,
+          	rel: 0
+          },
+          events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+          }
+        });
+      }
+      
+      function answerinput(){
+      	var currenttext =  document.getElementById('textarea0').value;
+      }
+      
+      function goback() {
+      	stoptimer();
+      	mediaplayer.stopVideo();
+      	mediaplayer.destroy();
+      }
+      
+      function starttimer() {
+      	timeoutcounter = setTimeout(reachedEnd, 5000);
+      }
+      
+      function stoptimer() {
+      	clearTimeout(timeoutcounter);
+      }
+      
+      function reachedEnd() {
+      	event0.target.seekTo(randomstart);
+        starttimer();
+        //player.stopVideo();
+      }
+	  
+      function onPlayerStateChange(event) {
+      }
+    </script>
+    
+    
+    
+    
+    
+    
+    
+    <div align="center">
+   
+
+    
+ 
+    <p><div id="mediaplayer"></div></p>
+
+	<form action="index.html">
+   	 <input type="submit" value="GO BACK" />
+	</form>
+
+
+    <p><textarea rows="4" cols="50" id="textarea0" oninput="answerinput()">wat is deze</textarea></p>
+    
+    
+    </div>
+
+    
+    
+    
+  </body>
+</html>
