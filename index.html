@@ -1,124 +1,20 @@
 <!DOCTYPE html>
 <html>
   <body>
-  <script>
-      
-      var tag = document.createElement('script');
-      var event0;
-      var randomstart;
-      var timeoutcounter;
-      tag.src = "https://www.youtube.com/iframe_api";
-      var firstScriptTag = document.getElementsByTagName('script')[0];
-      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-	  window.onload = function(){
-      	document.getElementById("button1").style.visibility = "hidden"; 
-        document.getElementById('textarea0').style.visibility = 'hidden';
-      };
-      var player;
-      function onYouTubeIframeAPIReady() {
-      	
-      }
-      function onPlayerReady(event) {
-        event0 = event;
-        event0.target.playVideo();
-        //var videolength = event0.target.getDuration():
-        randomstart = Math.floor((Math.random() * 120) + 20);
-        event0.target.seekTo(randomstart);
-        starttimer();
-      }
-      
-      function start() {
-      	document.getElementById('button0').style.visibility = 'hidden';
-        document.getElementById('button1').style.visibility = 'visible';
-        document.getElementById('textarea0').style.visibility = 'visible';
-        
-      	var url; 
-        var temprand = Math.floor((Math.random() * 7) + 0);
-        if (temprand==0) url = 'sjCw3-YTffo';
-        if (temprand==1) url = 'hdVtdVpoNjk';
-        if (temprand==2) url = '9vlNdfSyi-8';
-        if (temprand==3) url = 'rP7r12Rg490';
-        if (temprand==4) url = '44wDwMQVqCc';
-        if (temprand==5) url = 'f7MbmXklj3Q';
-        if (temprand==6) url = 'tPnK39ax_AM';
-        
-   
-        player = new YT.Player('player', {
-          height: '390',
-          width: '640',
-          videoId: url,	
-          playerVars: {
-          	autoplay: 0,
-          	controls: 0,
-          	disablekb: 1,
-          	hl: 'ru-ru',
-          	loop: 0,
-          	showinfo: 0,
-          	autohide: 1,
-          	rel: 0
-          },
-          events: {
-            'onReady': onPlayerReady,
-            'onStateChange': onPlayerStateChange
-          }
-        });
-      }
-      
-      function goback() {
-      	stoptimer();
-      	player.stopVideo();
-      	player.destroy();
-        document.getElementById('button0').style.visibility = 'visible';
-        document.getElementById('button1').style.visibility = 'hidden';
-        document.getElementById('textarea0').style.visibility = 'hidden';
-      }
-      
-      function starttimer() {
-      	timeoutcounter = setTimeout(reachedEnd, 5000);
-      }
-      
-      function stoptimer() {
-      	clearTimeout(timeoutcounter);
-      }
-      
-      function reachedEnd() {
-      	event0.target.seekTo(randomstart);
-        starttimer();
-        //player.stopVideo();
-      }
-	  
-      function onPlayerStateChange(event) {
-      }
-    </script>
-    
-    
-    
-    
-    
-    
+
     
     <div align="center">
     
     <h1>Super Massive Music Quiz Ultra+ Edition</h1>
-	<p>1234</p>
+	<p></p>
 
-    
-    <p><button id="button0" onclick="start()">START</button></p>
-    <p><div id="player"></div></p>
-    <p><button id="button1" onclick="goback()">GO BACK</button></p>
-    
-    <p><textarea rows="4" cols="50" id="textarea0">text</textarea></p>
-    
+
+	<form action="quiz.html">
+   	 <input type="submit" value="START" />
+	</form>
     
     </div>
-   
-  
 
-
-    
-    
-    
-    
     
     
     
