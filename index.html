@@ -2,7 +2,7 @@
 <html>
   <body>
   <script>
-      // 2. This code loads the IFrame Player API code asynchronously.
+      
       var tag = document.createElement('script');
       var event0;
       var randomstart;
@@ -73,14 +73,6 @@
       	player.destroy();
         document.getElementById('button0').style.visibility = 'visible';
         document.getElementById('button1').style.visibility = 'hidden';
-      }
-
-      var done = false;
-      function onPlayerStateChange(event) {
-        if (event.data == YT.PlayerState.PLAYING && !done) {
-          
-          //done = true;
-        }
       }
       
       function starttimer() {
