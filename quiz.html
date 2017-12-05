@@ -17,7 +17,6 @@
       
 		window.onload = function(){
 			newPuzzle();
-			document.getElementById("yougotit").style.visibility = "hidden";
 		};
       
 		function onYouTubeIframeAPIReady() {
@@ -185,7 +184,7 @@
             
 			<p><textarea rows="4" cols="50" id="textarea0" oninput="giveAnswer()"></textarea></p>
             
-			<font size=40 id="yougotit">YOU GOT IT!</font>
+			<font size=40 id="yougotit" style="visibility:hidden;">YOU GOT IT!</font>
             
 			<p><div id="tags"></div></p>
 		</div>
