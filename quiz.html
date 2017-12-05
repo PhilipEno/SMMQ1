@@ -13,7 +13,7 @@
 		var tag1;
 		var tag0found;
 		var tag1found;
-      
+        var loopcounter;
       
       
 		window.onload = function(){
@@ -33,6 +33,7 @@
 		}
       
 		function newPuzzle() {
+        	loopcounter = 0;
 			tag0found = false;
 			tag1found = false;
 			document.getElementById("tags").innerHTML = "";
@@ -138,7 +139,7 @@
 				}
 			}   	
 			if (tag0found && tag1found){
-				pausetimer = setTimeout(reachedPauseEnd, 2000);
+           		document.getElementById("yougotit").innerHTML = "YOU GOT IT!";
 				document.getElementById("yougotit").style.visibility = "visible";
 			}
 		}
@@ -155,7 +156,7 @@
 		}
       
 		function startLoopTimer() {
-			looptimer = setTimeout(reachedLoopEnd, 5000);
+			looptimer = setTimeout(reachedLoopEnd, 100);
 		}
       
 		function stopTimers() {
@@ -164,10 +165,19 @@
 		}
       
 		function reachedLoopEnd() {
-			mediaplayer.seekTo(randomseekto);
-			startLoopTimer();
-			//player.stopVideo();
-		}
+            loopcounter++;
+            var progressbar = document.getElementById("progressbar");
+            progressbar.value = 150-loopcounter;
+            if (loopcounter<150){
+            	startLoopTimer();
+            }else{
+            	pausetimer = setTimeout(reachedPauseEnd, 2000);
+                if (!tag0found || !tag1found){
+					document.getElementById("yougotit").innerHTML = "YOU FAILED!";	
+					document.getElementById("yougotit").style.visibility = "visible";
+				}
+            }
+        }
 	  
 		function onPlayerStateChange(event) {
 		}
@@ -204,6 +214,10 @@
 				<input type="submit" value="GO BACK" />
 			</form>
 			<p><div id="mediaplayer" style="width:0;height:0;border:0; border:none;"></div></p>
+            
+            <progress id="progressbar" value="150" max="150">
+			</progress>
+            
 			<p><textarea rows="4" cols="50" id="textarea0" oninput="giveAnswer()"></textarea></p>
 			<font size=40 id="yougotit">YOU GOT IT!</font>
 			<p><div id="tags"></div></p>
