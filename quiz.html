@@ -13,7 +13,7 @@
 		var tag1;
 		var tag0found;
 		var tag1found;
-        var loopcounter;
+		var loopcounter;
       
       
 		window.onload = function(){
@@ -39,79 +39,48 @@
 			document.getElementById("tags").innerHTML = "";
 			document.getElementById("yougotit").style.visibility = "hidden";
         
-			var url; 
-			var temprand = Math.floor((Math.random() * 10) + 0);
-			if (temprand==0){
-				url = 'sjCw3-YTffo';
-				tag0 = "the band";
-				tag1 = "the weight";
-			}
-			if (temprand==1){
-				url = 'EHfx9LXzxpw';
-				tag0 = "oasis";
-				tag1 = "whatever";
-			}
-			if (temprand==2){
-				url = 'An2a1_Do_fc';
-				tag0 = "neil young";
-				tag1 = "old man";
-			}
-			if (temprand==3){
-				url = 'rP7r12Rg490';
-				tag0 = "the band";
-				tag1 = "it makes no difference";
-			}
-			if (temprand==4){ 
-				url = '44wDwMQVqCc';
-				tag0 = "the band";
-				tag1 = "caravan";
-			}
-			if (temprand==5){ 
-				url = 'W8jK978n4xI';
-				tag0 = "the mills brothers";
-				tag1 = "sweet lucy brown";
-			}
-			if (temprand==6){ 
-				url = 'DkWn69VBslw';
-				tag0 = "alison krauss";
-				tag1 = "down to the river to pray";
-			}
-			if (temprand==7){ 
-				url = 'BmvzchQmtPs';
-				tag0 = "hank williams sr";
-				tag1 = "my buckets got a hole in it";
-			}
-			if (temprand==8){ 
-				url = 'uq-gYOrU8bA';
-				tag0 = "paul simon";
-				tag1 = "you can call me al";
-			}
-			if (temprand==9){ 
-				url = '0yBnIUX0QAE';
-				tag0 = "toploader";
-				tag1 = "dancing in the moonlight";
-			}
-      
-      
-			mediaplayer = new YT.Player('mediaplayer', {
-				height: '390',
-				width: '640',
-				videoId: url,	
-				playerVars: {
-					autoplay: 0,
-					controls: 0,
-					disablekb: 1,
-					hl: 'ru-ru',
-					loop: 0,
-					showinfo: 0,
-					autohide: 1,
-					rel: 0
-				},
-				events: {
-					'onReady': onPlayerReady,
-					'onStateChange': onPlayerStateChange
-				}
-			});
+        
+        	var songdata;
+   		var rawFile = new XMLHttpRequest();			
+    		rawFile.open("GET", "https://frankvdg.github.io/SMMQ1/playlist.txt", false);
+    		rawFile.onreadystatechange = function()
+      		{
+					if(rawFile.readyState === 4)
+					{
+           			if(rawFile.status === 200 || rawFile.status == 0)
+           	 		{
+           	     		var allText = rawFile.responseText;
+							songdata = allText.split('\n');
+                     var numsongs = songdata.length / 4;
+                     var randomselect = Math.floor((Math.random() * numsongs) + 0);
+							url  = songdata[randomselect*4 + 0];
+							tag0 = songdata[randomselect*4 + 1];
+							tag1 = songdata[randomselect*4 + 2];
+                        
+                     mediaplayer = new YT.Player('mediaplayer', {
+								height: '390',
+								width: '640',
+								videoId: url,	
+								playerVars: {
+								autoplay: 0,
+								controls: 0,
+								disablekb: 1,
+								hl: 'ru-ru',
+								loop: 0,
+								showinfo: 0,
+								autohide: 1,
+								rel: 0
+							},
+							events: {
+								'onReady': onPlayerReady,
+								'onStateChange': onPlayerStateChange
+							}
+						});
+            	}
+        		}
+    		}
+    		rawFile.send(null);
+			
 		}
       
 		function addVisibleTag(thetag){
@@ -139,7 +108,7 @@
 				}
 			}   	
 			if (tag0found && tag1found){
-           		document.getElementById("yougotit").innerHTML = "YOU GOT IT!";
+				document.getElementById("yougotit").innerHTML = "YOU GOT IT!";
 				document.getElementById("yougotit").style.visibility = "visible";
 			}
 		}
@@ -165,20 +134,20 @@
 		}
       
 		function reachedLoopEnd() {
-            loopcounter++;
-            var progressbar = document.getElementById("progressbar");
-            progressbar.value = 150-loopcounter;
-            if (loopcounter<150){
-            	startLoopTimer();
-            }else{
+         loopcounter++;
+         var progressbar = document.getElementById("progressbar");
+         progressbar.value = 150-loopcounter;
+         if (loopcounter<150){
+         	startLoopTimer();
+         }else{
 				mediaplayer.stopVideo();
 				pausetimer = setTimeout(reachedPauseEnd, 2000);
-                if (!tag0found || !tag1found){
+            if (!tag0found || !tag1found){
 					document.getElementById("yougotit").innerHTML = "YOU FAILED!";	
 					document.getElementById("yougotit").style.visibility = "visible";
 				}
-            }
-        }
+         }
+		}
 	  
 		function onPlayerStateChange(event) {
 		}
@@ -214,13 +183,16 @@
 			<form action="index.html">
 				<input type="submit" value="GO BACK" />
 			</form>
+            
 			<p><div id="mediaplayer" style="width:0;height:0;border:0; border:none;"></div></p>
             
-            <progress id="progressbar" value="150" max="150">
+			<progress id="progressbar" value="150" max="150">
 			</progress>
             
 			<p><textarea rows="4" cols="50" id="textarea0" oninput="giveAnswer()"></textarea></p>
+            
 			<font size=40 id="yougotit">YOU GOT IT!</font>
+            
 			<p><div id="tags"></div></p>
 		</div>
 	</body>
