@@ -1,195 +1,212 @@
 <!DOCTYPE html>
 <html>
-  <body>
-  <script>
-      var tag = document.createElement('script');
-      var randomseekto;
-      var looptimer;
-      var pausetimer;
-      tag.src = "https://www.youtube.com/iframe_api";
-      var firstScriptTag = document.getElementsByTagName('script')[0];
-      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-	  var mediaplayer;
-      var tag0;
-      var tag1;
-      var tag0found;
-      var tag1found;
-
+	<script>
+		var tag = document.createElement('script');
+		var randomseekto;
+		var looptimer;
+		var pausetimer;
+		tag.src = "https://www.youtube.com/iframe_api";
+		var firstScriptTag = document.getElementsByTagName('script')[0];
+		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+		var mediaplayer;
+		var tag0;
+		var tag1;
+		var tag0found;
+		var tag1found;
       
       
       
-      window.onload = function(){
-        newPuzzle();
-        document.getElementById("yougotit").style.visibility = "hidden";
-      };
+		window.onload = function(){
+			newPuzzle();
+			document.getElementById("yougotit").style.visibility = "hidden";
+		};
       
-      function onYouTubeIframeAPIReady() {
-      }
+		function onYouTubeIframeAPIReady() {
+		}
       
-      function onPlayerReady(event) {
-        mediaplayer.playVideo();
-        //var videolength = event0.target.getDuration():
-        randomseekto = Math.floor((Math.random() * 120) + 20);
-        mediaplayer.seekTo(randomseekto);
-        startLoopTimer();
-      }
+		function onPlayerReady(event) {
+			mediaplayer.playVideo();
+			//var videolength = event0.target.getDuration():
+			randomseekto = Math.floor((Math.random() * 120) + 20);
+			mediaplayer.seekTo(randomseekto);
+			startLoopTimer();
+		}
       
-      function newPuzzle() {
-        tag0found = false;
-        tag1found = false;
-        document.getElementById("tags").innerHTML = "";
-        document.getElementById("yougotit").style.visibility = "hidden";
+		function newPuzzle() {
+			tag0found = false;
+			tag1found = false;
+			document.getElementById("tags").innerHTML = "";
+			document.getElementById("yougotit").style.visibility = "hidden";
         
-      	var url; 
-        var temprand = Math.floor((Math.random() * 10) + 0);
-        if (temprand==0){
-          url = 'sjCw3-YTffo';
-          tag0 = "the band";
-          tag1 = "the weight";
-        }
-        if (temprand==1){
-          url = 'EHfx9LXzxpw';
-          tag0 = "oasis";
-          tag1 = "whatever";
-        }
-        if (temprand==2){
-          url = '9vlNdfSyi-8';
-          tag0 = "the band";
-          tag1 = "the weight";
-        }
-        if (temprand==3){
-          url = 'rP7r12Rg490';
-          tag0 = "the band";
-          tag1 = "it makes no difference";
-        }
-        if (temprand==4){ 
-          url = '44wDwMQVqCc';
-          tag0 = "the band";
-          tag1 = "caravan";
-        }
-        if (temprand==5){ 
-          url = 'W8jK978n4xI';
-          tag0 = "the mills brothers";
-          tag1 = "sweet lucy brown";
-        }
-        if (temprand==6){ 
-          url = 'DkWn69VBslw';
-          tag0 = "alison krauss";
-          tag1 = "down to the river to pray";
-        }
-        if (temprand==7){ 
-          url = 'BmvzchQmtPs';
-          tag0 = "hank williams sr";
-          tag1 = "my buckets got a hole in it";
-        }
-        if (temprand==8){ 
-          url = 'uq-gYOrU8bA';
-          tag0 = "paul simon";
-          tag1 = "you can call me al";
-        }
-        if (temprand==9){ 
-          url = '0yBnIUX0QAE';
-          tag0 = "toploader";
-          tag1 = "dancing in the moonlight";
-        }
-
+			var url; 
+			var temprand = Math.floor((Math.random() * 10) + 0);
+			if (temprand==0){
+				url = 'sjCw3-YTffo';
+				tag0 = "the band";
+				tag1 = "the weight";
+			}
+			if (temprand==1){
+				url = 'EHfx9LXzxpw';
+				tag0 = "oasis";
+				tag1 = "whatever";
+			}
+			if (temprand==2){
+				url = '9vlNdfSyi-8';
+				tag0 = "the band";
+				tag1 = "the weight";
+			}
+			if (temprand==3){
+				url = 'rP7r12Rg490';
+				tag0 = "the band";
+				tag1 = "it makes no difference";
+			}
+			if (temprand==4){ 
+				url = '44wDwMQVqCc';
+				tag0 = "the band";
+				tag1 = "caravan";
+			}
+			if (temprand==5){ 
+				url = 'W8jK978n4xI';
+				tag0 = "the mills brothers";
+				tag1 = "sweet lucy brown";
+			}
+			if (temprand==6){ 
+				url = 'DkWn69VBslw';
+				tag0 = "alison krauss";
+				tag1 = "down to the river to pray";
+			}
+			if (temprand==7){ 
+				url = 'BmvzchQmtPs';
+				tag0 = "hank williams sr";
+				tag1 = "my buckets got a hole in it";
+			}
+			if (temprand==8){ 
+				url = 'uq-gYOrU8bA';
+				tag0 = "paul simon";
+				tag1 = "you can call me al";
+			}
+			if (temprand==9){ 
+				url = '0yBnIUX0QAE';
+				tag0 = "toploader";
+				tag1 = "dancing in the moonlight";
+			}
       
       
-        mediaplayer = new YT.Player('mediaplayer', {
-          height: '390',
-          width: '640',
-          videoId: url,	
-          playerVars: {
-          	autoplay: 0,
-          	controls: 0,
-          	disablekb: 1,
-          	hl: 'ru-ru',
-          	loop: 0,
-          	showinfo: 0,
-          	autohide: 1,
-          	rel: 0
-          },
-          events: {
-            'onReady': onPlayerReady,
-            'onStateChange': onPlayerStateChange
-          }
-        });
-      }
+			mediaplayer = new YT.Player('mediaplayer', {
+				height: '390',
+				width: '640',
+				videoId: url,	
+				playerVars: {
+					autoplay: 0,
+					controls: 0,
+					disablekb: 1,
+					hl: 'ru-ru',
+					loop: 0,
+					showinfo: 0,
+					autohide: 1,
+					rel: 0
+				},
+				events: {
+					'onReady': onPlayerReady,
+					'onStateChange': onPlayerStateChange
+				}
+			});
+		}
       
-      function addVisibleTag(thetag){
-      	var list = document.createElement('ul');
-        var item0 = document.createElement('li');
-        item0.appendChild(document.createTextNode(thetag));
-        list.appendChild(item0);
-        document.getElementById('tags').appendChild(list);
-      }
+		function addVisibleTag(thetag){
+			var list = document.createElement('ul');
+			var item0 = document.createElement('li');
+			item0.appendChild(document.createTextNode(thetag));
+			list.appendChild(item0);
+			document.getElementById('tags').appendChild(list);
+		}
       
-      function giveAnswer(){
-      	var currenttext =  document.getElementById('textarea0').value;
-        if (!tag0found){
-        	if (currenttext == tag0){
-            	tag0found = true;
-                addVisibleTag(tag0);
-                document.getElementById('textarea0').value = "";
-            }
-        }       
-		if (!tag1found){
-        	if (currenttext == tag1){
-            	tag1found = true;
-                addVisibleTag(tag1);
-                document.getElementById('textarea0').value = "";
-            }
-        }   	
-        if (tag0found && tag1found){
-        	pausetimer = setTimeout(reachedPauseEnd, 2000);
-            document.getElementById("yougotit").style.visibility = "visible";
-        }
-      }
+		function giveAnswer(){
+			var currenttext =  document.getElementById('textarea0').value;
+			if (!tag0found){
+				if (currenttext == tag0){
+					tag0found = true;
+					addVisibleTag(tag0);
+					document.getElementById('textarea0').value = "";
+				}
+			}       
+			if (!tag1found){
+				if (currenttext == tag1){
+					tag1found = true;
+					addVisibleTag(tag1);
+					document.getElementById('textarea0').value = "";
+				}
+			}   	
+			if (tag0found && tag1found){
+				pausetimer = setTimeout(reachedPauseEnd, 2000);
+				document.getElementById("yougotit").style.visibility = "visible";
+			}
+		}
       
-      function reachedPauseEnd() {
-      	endPuzzle();
-        newPuzzle();
-      }
+		function reachedPauseEnd() {
+			endPuzzle();
+			newPuzzle();
+		}
       
-      function endPuzzle() {
-      	stopTimers();
-      	mediaplayer.stopVideo();
-      	mediaplayer.destroy();
-      }
+		function endPuzzle() {
+			stopTimers();
+			mediaplayer.stopVideo();
+			mediaplayer.destroy();
+		}
       
-      function startLoopTimer() {
-      	looptimer = setTimeout(reachedLoopEnd, 5000);
-      }
+		function startLoopTimer() {
+			looptimer = setTimeout(reachedLoopEnd, 5000);
+		}
       
-      function stopTimers() {
-      	clearTimeout(looptimer);
-        clearTimeout(pausetimer);
-      }
+		function stopTimers() {
+			clearTimeout(looptimer);
+			clearTimeout(pausetimer);
+		}
       
-      function reachedLoopEnd() {
-      	mediaplayer.seekTo(randomseekto);
-        startLoopTimer();
-        //player.stopVideo();
-      }
+		function reachedLoopEnd() {
+			mediaplayer.seekTo(randomseekto);
+			startLoopTimer();
+			//player.stopVideo();
+		}
 	  
-      function onPlayerStateChange(event) {
-      }
-    </script>
+		function onPlayerStateChange(event) {
+		}
+	</script>
     
+	<style>
+		body {
+			background-color: #CDC5B0;
+		}
+		h1 {
+			color: black;
+			text-align: center;
+			font-family: verdana;
+		}
+		p {
+			text-align: center;
+			font-family: verdana;
+			font-size: 20px;
+		}
+		.container {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			-moz-transform: translateX(-50%) translateY(-50%);
+			-webkit-transform: translateX(-50%) translateY(-50%);
+			transform: translateX(-50%) translateY(-50%);
+		}
+	</style>
  
  
- 
-    <div align="center">
-    <p><div id="mediaplayer"></div></p>
-	<form action="index.html">
-   	 <input type="submit" value="GO BACK" />
-	</form>
-    <p><textarea rows="4" cols="50" id="textarea0" oninput="giveAnswer()"></textarea></p>
-    <font size=40 id="yougotit">YOU GOT IT!</font>
-    </div>
-    <p><div id="tags"></div></p>
-    
-    
-
-  </body>
+	<body>
+		<div align="center">
+			<form action="index.html">
+				<input type="submit" value="GO BACK" />
+			</form>
+			<p><div id="mediaplayer"></div></p>
+			<p><textarea rows="4" cols="50" id="textarea0" oninput="giveAnswer()"></textarea></p>
+			<font size=40 id="yougotit">YOU GOT IT!</font>
+			<p><div id="tags"></div></p>
+		</div>
+	</body>
 </html>

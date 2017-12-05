@@ -1,26 +1,26 @@
-  <style>
+<style>
 	body {
-	  background-color: #CDC5B0;
+		background-color: #CDC5B0;
 	}
 
 	h1 {
-	  color: black;
-      text-align: center;
-      font-family: verdana;
-      font-size: 50px;
+		color: black;
+		text-align: center;
+		font-family: verdana;
+		font-size: 50px;
 	}
 
 	p {
-      text-align: center;
-      font-family: verdana;
-      font-size: 20px;
+		text-align: center;
+		font-family: verdana;
+		font-size: 20px;
 	}
     .container {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      -moz-transform: translateX(-50%) translateY(-50%);
-      -webkit-transform: translateX(-50%) translateY(-50%);
-      transform: translateX(-50%) translateY(-50%);
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		-moz-transform: translateX(-50%) translateY(-50%);
+		-webkit-transform: translateX(-50%) translateY(-50%);
+		transform: translateX(-50%) translateY(-50%);
     }
-  </style>
+</style>
