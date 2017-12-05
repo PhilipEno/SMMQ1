@@ -171,7 +171,8 @@
             if (loopcounter<150){
             	startLoopTimer();
             }else{
-            	pausetimer = setTimeout(reachedPauseEnd, 2000);
+				mediaplayer.stopVideo();
+				pausetimer = setTimeout(reachedPauseEnd, 2000);
                 if (!tag0found || !tag1found){
 					document.getElementById("yougotit").innerHTML = "YOU FAILED!";	
 					document.getElementById("yougotit").style.visibility = "visible";
