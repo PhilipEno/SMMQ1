@@ -16,7 +16,7 @@
 		var tag0found;
 		var tag1found;
 		var timeleft;
-
+        
 		//function that loads on window start
 		window.onload = function()
 		{
@@ -27,7 +27,7 @@
 		function onYouTubeIframeAPIReady() 
 		{
 		}
-
+        
 		//start a new puzzle
 		function newPuzzle() 
 		{
@@ -36,7 +36,6 @@
 			tag1found = false;
 			document.getElementById("tags").innerHTML = "";
 			document.getElementById("yougotit").style.visibility = "hidden";
-
 			//load all songs and select a random song
 			var songdata;
 			var rawFile = new XMLHttpRequest();			
@@ -79,7 +78,7 @@
     		}
     		rawFile.send(null);
 		}
-
+		
 		//called when youtube player has song loaded
 		function onPlayerReady(event) 
 		{
@@ -91,11 +90,12 @@
 			
 			startAnswerTimer();
 		}
-
+		
 		//suggest an answer from the textarea
 		function giveAnswer() 
 		{
 			var currenttext = document.getElementById('textarea0').value;
+            currenttext = currenttext.toLowerCase();
 			if (!tag0found)
 			{
 				if (currenttext == tag0) 
@@ -120,7 +120,7 @@
 				document.getElementById("yougotit").style.visibility = "visible";
 			}
 		}
-
+		
 		//this function adds a tag (thetag) to the found tags list
 		function addVisibleAnswerTag(thetag) 
 		{
@@ -130,7 +130,7 @@
 			list.appendChild(item0);
 			document.getElementById('tags').appendChild(list);
 		}
-
+		
 		//start the timer for answering period
 		function startAnswerTimer() 
 		{
@@ -154,13 +154,13 @@
 				}
 			}
 		}
-
+		
 		//called when 2 sec pause between songs ends
 		function reachedPauseEnd()
 		{
 			newPuzzle();
 		}
-
+		
 		//required by youtube?
 		function onPlayerStateChange(event) 
 		{
