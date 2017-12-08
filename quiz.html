@@ -2,19 +2,17 @@
 <html>
 	<script>
 		//youtube start shizzle
-		var tag = document.createElement('script');
-		tag.src = "https://www.youtube.com/iframe_api";
+		var yttag = document.createElement('script');
+		yttag.src = "https://www.youtube.com/iframe_api";
 		var firstScriptTag = document.getElementsByTagName('script')[0];
-		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+		firstScriptTag.parentNode.insertBefore(yttag, firstScriptTag);
         
 		//global vars
 		var answertimer;
 		var pausetimer;
 		var mediaplayer;
-		var tag0;
-		var tag1;
-		var tag0found;
-		var tag1found;
+		var tags = []; //array of tags
+		var tagfound = []; //array of tag founds
 		var timeleft;
         
 		//function that loads on window start
@@ -32,12 +30,11 @@
 		function newPuzzle() 
 		{
 			timeleft = 15000;
-			tag0found = false;
-			tag1found = false;
 			document.getElementById("tags").innerHTML = "";
+            document.getElementById("tagstest").innerHTML = "";
 			document.getElementById("yougotit").style.visibility = "hidden";
+            
 			//load all songs and select a random song
-			var songdata;
 			var rawFile = new XMLHttpRequest();			
 			rawFile.open("GET", "https://frankvdg.github.io/SMMQ1/playlist.txt", false);
 			rawFile.onreadystatechange = function() 
@@ -47,14 +44,23 @@
 					if(rawFile.status === 200 || rawFile.status == 0) 
 					{
 						var allText = rawFile.responseText;
-						songdata = allText.split('\n');
+						var songdata = allText.split('\n');
 						var numsongs = songdata.length / 4;
 						var randomselect = Math.floor((Math.random() * numsongs) + 0);
 						url  = songdata[randomselect*4 + 0];
-						tag0 = songdata[randomselect*4 + 1];
-						tag1 = songdata[randomselect*4 + 2];
-                        tag0 = tag0.toLowerCase();
-                        tag1 = tag1.toLowerCase();
+                       
+                        tags = [];
+                        tags = tags.concat ((songdata[randomselect*4 + 1]).toLowerCase().split(' '));
+						tags = tags.concat ((songdata[randomselect*4 + 2]).toLowerCase().split(' '));
+                        var numtags = tags.length;
+                        tagfound = [];
+                        for (var i = 0; i < numtags; i++) 
+            			{
+                        	tags[i] = tags[i].trim();   //remove whites from start and end
+                        	addVisibleAnswerTagTest (tags[i]);
+                            tagfound.push (false);
+                        }
+                         
                 
 						mediaplayer = new YT.Player('mediaplayer', {
 								height: '390',
@@ -78,18 +84,18 @@
 					}
         		}
     		}
-    		rawFile.send(null);
+    		rawFile.send(null);		            
 		}
 		
 		//called when youtube player has song loaded
 		function onPlayerReady(event) 
-		{
+		{         
 			mediaplayer.playVideo();
-			
+	
 			//start song in random position
 			var randomseekto = Math.floor((Math.random() * 80) + 20);
 			mediaplayer.seekTo(randomseekto);
-			
+
 			startAnswerTimer();
 		}
 		
@@ -97,32 +103,43 @@
 		function giveAnswer() 
 		{
 			var currenttext = document.getElementById('textarea0').value;
-            currenttext = currenttext.toLowerCase();
-			if (!tag0found)
-			{
-				if (currenttext == tag0) 
+            currenttext = currenttext.toLowerCase().trim();
+            
+            var numtags = tags.length;
+			for (var i = 0; i < numtags; i++) 
+            {
+ 				if (tagfound[i] == false)
 				{
-					tag0found = true;
-					addVisibleAnswerTag(tag0);
-					document.getElementById('textarea0').value = "";
-				}
-			}       
-			if (!tag1found) 
-			{
-				if (currenttext == tag1) 
-				{
-					tag1found = true;
-					addVisibleAnswerTag(tag1);
-					document.getElementById('textarea0').value = "";
-				}
-			}   	
-			if (tag0found && tag1found)
+					if (currenttext == tags[i]) 
+					{
+						tagfound[i] = true;
+						addVisibleAnswerTag(tags[i]);
+						document.getElementById('textarea0').value = "";
+					}
+				}      
+            }
+
+			if (checkAnswerTagsAllFound())
 			{
 				document.getElementById("yougotit").innerHTML = "YOU GOT IT!";
 				document.getElementById("yougotit").style.visibility = "visible";
 			}
 		}
 		
+        //checks if all tags have been found
+        function checkAnswerTagsAllFound()
+        {
+        	var numtags = tags.length;
+            for (var i = 0; i < numtags; i++) 
+            {
+            	if (tagfound[i] == false)
+                {
+                	return false;
+                }
+            }
+            return true;
+        }
+        
 		//this function adds a tag (thetag) to the found tags list
 		function addVisibleAnswerTag(thetag) 
 		{
@@ -131,6 +148,14 @@
 			item0.appendChild(document.createTextNode(thetag));
 			list.appendChild(item0);
 			document.getElementById('tags').appendChild(list);
+		}
+        function addVisibleAnswerTagTest(thetag) 
+		{/*
+			var list = document.createElement('ul');
+			var item0 = document.createElement('li');
+			item0.appendChild(document.createTextNode(thetag));
+			list.appendChild(item0);
+			document.getElementById('tagstest').appendChild(list);*/
 		}
 		
 		//start the timer for answering period
@@ -143,13 +168,14 @@
 				{
 					timeleft-=10; 
     		  		progressbar.value = timeleft;
-               } else {
+               	} else {
     		  		clearInterval(answertimer);
-               mediaplayer.stopVideo();
-               mediaplayer.destroy();
+					mediaplayer.stopVideo();
+					mediaplayer.destroy();
 					pausetimer = setTimeout(reachedPauseEnd, 2000);
-               if (!tag0found || !tag1found)
-               {
+				
+               		if (!checkAnswerTagsAllFound())
+               		{	
 						document.getElementById("yougotit").innerHTML = "YOU FAILED!";	
 						document.getElementById("yougotit").style.visibility = "visible";
 					}
@@ -199,12 +225,10 @@
 			-webkit-transform: translateX(-50%) translateY(-50%);
 			transform: translateX(-50%) translateY(-50%);
 		}
+
 	</style>
 
 
-
-	
-	
 	
 	
 
@@ -223,7 +247,11 @@
 
 			<font size=40 id="yougotit" style="visibility:hidden;">YOU GOT IT!</font>
 
+			<p></p>
 			<p><div id="tags"></div></p>
+            <p></p>
+			<p><div id="tagstest"></div></p>
+
 		</div>
 	</body>
 </html>
