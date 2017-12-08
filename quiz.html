@@ -53,6 +53,8 @@
 						url  = songdata[randomselect*4 + 0];
 						tag0 = songdata[randomselect*4 + 1];
 						tag1 = songdata[randomselect*4 + 2];
+                        tag0 = tag0.toLowerCase();
+                        tag1 = tag1.toLowerCase();
                 
 						mediaplayer = new YT.Player('mediaplayer', {
 								height: '390',
