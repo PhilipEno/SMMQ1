@@ -49,16 +49,26 @@
 					var randomselect = Math.floor((Math.random() * numsongs) + 0);
 					url  = songdata[randomselect*4 + 0];
                    
-                    tags = [];
-                    tags = tags.concat ((songdata[randomselect*4 + 1]).toLowerCase().split(' '));
-					tags = tags.concat ((songdata[randomselect*4 + 2]).toLowerCase().split(' '));
+                    artisttags = [];
+                    artisttags = artisttags.concat ((songdata[randomselect*4 + 1]).toLowerCase().split(' '));
+					
+                    titletags = [];
+                    titletags = titletags.concat ((songdata[randomselect*4 + 2]).toLowerCase().split(' '));
                     
-                    tagfound = [];
-                    var numtags = tags.length;
-                    for (var i=0; i<numtags; i++) 
+                    artisttagsfound = [];
+                    var numartisttags = artisttags.length;
+                    for (var i=0; i<numartisttags; i++) 
         			{
-                    	tags[i] = tags[i].trim();   //remove whites from start and end
-                        tagfound.push (false);
+                    	artisttags[i] = artisttags[i].trim();   //remove whites from start and end
+                        artisttagsfound.push (false);
+                    }
+                    
+                    titletagsfound = [];
+                    var numtitletags = titletags.length;
+                    for (var i=0; i<numtitletags; i++) 
+        			{
+                    	titletags[i] = titletags[i].trim();   //remove whites from start and end
+                        titletagsfound.push (false);
                     }
                     
 					mediaplayer = new YT.Player('mediaplayer', {
@@ -105,14 +115,35 @@
 		var currenttext = document.getElementById('textarea0').value;
         currenttext = currenttext.toLowerCase().trim();
         
-		var numtags = tags.length;
-        for (var i=0; i<numtags; i++) 
+		var numartisttags = artisttags.length;
+        for (var i=0; i<numartisttags; i++) 
         {
-			if (tagfound[i] == false)
+			if (artisttagsfound[i] == false)
 			{
-				if (currenttext == tags[i]) 
+				if (currenttext == artisttags[i]) 
 				{
-					tagfound[i] = true;
+					artisttagsfound[i] = true;
+					updateVisibleAnswerTags();
+					document.getElementById('textarea0').value = "";
+                    
+                    if (checkAnswerTagsAllFound())
+					{		
+						document.getElementById("yougotit").innerHTML = "YOU GOT IT!";
+						document.getElementById("yougotit").style.visibility = "visible";
+					}
+                    return;
+				}
+			}      
+        }
+        
+        var numtitletags = titletags.length;
+        for (var i=0; i<numtitletags; i++) 
+        {
+			if (titletagsfound[i] == false)
+			{
+				if (currenttext == titletags[i]) 
+				{
+					titletagsfound[i] = true;
 					updateVisibleAnswerTags();
 					document.getElementById('textarea0').value = "";
                     
@@ -130,10 +161,18 @@
     //checks if all tags have been found
     function checkAnswerTagsAllFound()
     {
-        var numtags = tags.length;
-        for (var i=0; i<numtags; i++) 
+        var numartisttags = artisttags.length;
+        for (var i=0; i<numartisttags; i++) 
         {
-        	if (tagfound[i] == false)
+        	if (artisttagsfound[i] == false)
+            {
+            	return false;
+            }
+        }
+        var numtitletags = titletags.length;
+        for (var i=0; i<numtitletags; i++) 
+        {
+        	if (titletagsfound[i] == false)
             {
             	return false;
             }
@@ -144,18 +183,29 @@
 	//show all found tags in answertable
 	function updateVisibleAnswerTags() 
 	{
-		var foundtags = "";
-        var numtags = tags.length;
-        for (var i=0; i<numtags; i++) 
+		var text = "";
+        var numartisttags = artisttags.length;
+        for (var i=0; i<numartisttags; i++) 
         {
-        	if (tagfound[i] == true)
+        	if (artisttagsfound[i] == true)
             {
-            	foundtags += tags[i];
-                foundtags += " ";
+            	text += artisttags[i];
+                text += " ";
             }
         }
-        document.getElementById("answerartisttags").innerHTML = foundtags;
-        document.getElementById("answertitletags").innerHTML = foundtags;
+        document.getElementById("answerartisttags").innerHTML = text;
+        
+        text = "";
+        var numtitletags = titletags.length;
+        for (var i=0; i<numtitletags; i++) 
+        {
+        	if (titletagsfound[i] == true)
+            {
+            	text += titletags[i];
+                text += " ";
+            }
+        }
+        document.getElementById("answertitletags").innerHTML = text;
 	}
 	
 	//start the timer for answering period
@@ -228,7 +278,7 @@ p {
 table {
     font-family: arial, sans-serif;
     border-collapse: collapse;
-    width: 50%;
+    width: 400px;
 }
 td {
     border: 1px solid #dddddd;
