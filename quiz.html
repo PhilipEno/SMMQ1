@@ -1,48 +1,52 @@
 <!DOCTYPE html>
 <html>
 	<script>
+		//youtube start shizzle
 		var tag = document.createElement('script');
 		tag.src = "https://www.youtube.com/iframe_api";
 		var firstScriptTag = document.getElementsByTagName('script')[0];
 		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-		var looptimer;
+        
+		//global vars
+		var answertimer;
 		var pausetimer;
 		var mediaplayer;
 		var tag0;
 		var tag1;
 		var tag0found;
 		var tag1found;
-		var loopcounter;
-      
-		window.onload = function(){
+		var timeleft;
+
+		//function that loads on window start
+		window.onload = function()
+		{
 			newPuzzle();
 		};
-      
-		function onYouTubeIframeAPIReady() {
+        
+		//function required by youtube api
+		function onYouTubeIframeAPIReady() 
+		{
 		}
-      
-		function onPlayerReady(event) {
-			mediaplayer.playVideo();
-			//var videolength = event0.target.getDuration():
-			var randomseekto = Math.floor((Math.random() * 80) + 20);
-			mediaplayer.seekTo(randomseekto);
-			startLoopTimer();
-		}
-      
-		function newPuzzle() {
-			loopcounter = 0;
+
+		//start a new puzzle
+		function newPuzzle() 
+		{
+			timeleft = 15000;
 			tag0found = false;
 			tag1found = false;
 			document.getElementById("tags").innerHTML = "";
 			document.getElementById("yougotit").style.visibility = "hidden";
-        
+
+			//load all songs and select a random song
 			var songdata;
 			var rawFile = new XMLHttpRequest();			
 			rawFile.open("GET", "https://frankvdg.github.io/SMMQ1/playlist.txt", false);
-			rawFile.onreadystatechange = function() {
-			if(rawFile.readyState === 4) {
-				if(rawFile.status === 200 || rawFile.status == 0) {
+			rawFile.onreadystatechange = function() 
+			{
+				if(rawFile.readyState === 4) 
+				{
+					if(rawFile.status === 200 || rawFile.status == 0) 
+					{
 						var allText = rawFile.responseText;
 						songdata = allText.split('\n');
 						var numsongs = songdata.length / 4;
@@ -50,7 +54,7 @@
 						url  = songdata[randomselect*4 + 0];
 						tag0 = songdata[randomselect*4 + 1];
 						tag1 = songdata[randomselect*4 + 2];
-                        
+                
 						mediaplayer = new YT.Player('mediaplayer', {
 								height: '390',
 								width: '640',
@@ -75,77 +79,102 @@
     		}
     		rawFile.send(null);
 		}
-      
-		function addVisibleTag(thetag) {
+
+		//called when youtube player has song loaded
+		function onPlayerReady(event) 
+		{
+			mediaplayer.playVideo();
+			
+			//start song in random position
+			var randomseekto = Math.floor((Math.random() * 80) + 20);
+			mediaplayer.seekTo(randomseekto);
+			
+			startAnswerTimer();
+		}
+
+		//suggest an answer from the textarea
+		function giveAnswer() 
+		{
+			var currenttext = document.getElementById('textarea0').value;
+			if (!tag0found)
+			{
+				if (currenttext == tag0) 
+				{
+					tag0found = true;
+					addVisibleAnswerTag(tag0);
+					document.getElementById('textarea0').value = "";
+				}
+			}       
+			if (!tag1found) 
+			{
+				if (currenttext == tag1) 
+				{
+					tag1found = true;
+					addVisibleAnswerTag(tag1);
+					document.getElementById('textarea0').value = "";
+				}
+			}   	
+			if (tag0found && tag1found)
+			{
+				document.getElementById("yougotit").innerHTML = "YOU GOT IT!";
+				document.getElementById("yougotit").style.visibility = "visible";
+			}
+		}
+
+		//this function adds a tag (thetag) to the found tags list
+		function addVisibleAnswerTag(thetag) 
+		{
 			var list = document.createElement('ul');
 			var item0 = document.createElement('li');
 			item0.appendChild(document.createTextNode(thetag));
 			list.appendChild(item0);
 			document.getElementById('tags').appendChild(list);
 		}
-      
-		function giveAnswer() {
-			var currenttext =  document.getElementById('textarea0').value;
-			if (!tag0found){
-				if (currenttext == tag0) {
-					tag0found = true;
-					addVisibleTag(tag0);
-					document.getElementById('textarea0').value = "";
+
+		//start the timer for answering period
+		function startAnswerTimer() 
+		{
+			answertimer = setInterval(answerTimerInterval, 10);
+			function answerTimerInterval() 
+			{
+				if (timeleft > 0) 
+				{
+					timeleft-=10; 
+    		  		progressbar.value = timeleft;
+               } else {
+    		  		clearInterval(answertimer);
+               mediaplayer.stopVideo();
+               mediaplayer.destroy();
+					pausetimer = setTimeout(reachedPauseEnd, 2000);
+               if (!tag0found || !tag1found)
+               {
+						document.getElementById("yougotit").innerHTML = "YOU FAILED!";	
+						document.getElementById("yougotit").style.visibility = "visible";
+					}
 				}
-			}       
-			if (!tag1found) {
-				if (currenttext == tag1) {
-					tag1found = true;
-					addVisibleTag(tag1);
-					document.getElementById('textarea0').value = "";
-				}
-			}   	
-			if (tag0found && tag1found ){
-           		document.getElementById("yougotit").innerHTML = "YOU GOT IT!";
-				document.getElementById("yougotit").style.visibility = "visible";
 			}
 		}
-      
-		function reachedPauseEnd() {
-			endPuzzle();
+
+		//called when 2 sec pause between songs ends
+		function reachedPauseEnd()
+		{
 			newPuzzle();
 		}
-      
-		function endPuzzle() {
-			stopTimers();
-			mediaplayer.stopVideo();
-			mediaplayer.destroy();
-		}
-      
-		function startLoopTimer() {
-			looptimer = setTimeout(reachedLoopEnd, 100);
-		}
-      
-		function stopTimers() {
-			clearTimeout(looptimer);
-			clearTimeout(pausetimer);
-		}
-      
-		function reachedLoopEnd() {
-            loopcounter++;
-            var progressbar = document.getElementById("progressbar");
-            progressbar.value = 150-loopcounter;
-            if (loopcounter<150){
-            	startLoopTimer();
-            }else{
-				mediaplayer.stopVideo();
-				pausetimer = setTimeout(reachedPauseEnd, 2000);
-                if (!tag0found || !tag1found){
-					document.getElementById("yougotit").innerHTML = "YOU FAILED!";	
-					document.getElementById("yougotit").style.visibility = "visible";
-				}
-            }
-        }
-	  
-		function onPlayerStateChange(event) {
+
+		//required by youtube?
+		function onPlayerStateChange(event) 
+		{
 		}
 	</script>
-    
+
+
+
+
+
+
+
+
+
 	<style>
 		body {
 			background-color: #CDC5B0;
@@ -169,23 +198,29 @@
 			transform: translateX(-50%) translateY(-50%);
 		}
 	</style>
- 
- 
+
+
+
+	
+	
+	
+	
+
 	<body>
 		<div align="center">
 			<form action="index.html">
 				<input type="submit" value="GO BACK" />
 			</form>
-            
+
 			<p><div id="mediaplayer" style="width:0;height:0;border:0; border:none;"></div></p>
-            
-            <progress id="progressbar" value="150" max="150">
+
+            <progress id="progressbar" value="15000" max="15000">
 			</progress>
-            
+
 			<p><textarea rows="4" cols="50" id="textarea0" oninput="giveAnswer()"></textarea></p>
-            
+
 			<font size=40 id="yougotit" style="visibility:hidden;">YOU GOT IT!</font>
-            
+
 			<p><div id="tags"></div></p>
 		</div>
 	</body>
