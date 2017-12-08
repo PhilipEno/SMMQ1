@@ -32,7 +32,7 @@
 	function newPuzzle() 
 	{
 		timeleft = 15000;
-		document.getElementById("yougotit").style.visibility = "hidden";
+		setResultMessage("");
         
 		//load all songs and select a random song
 		var rawFile = new XMLHttpRequest();			
@@ -71,6 +71,8 @@
                         titletagsfound.push (false);
                     }
                     
+                    updateVisibleAnswerTags();
+                    
 					mediaplayer = new YT.Player('mediaplayer', {
 							height: '390',
 							width: '640',
@@ -106,7 +108,6 @@
 		mediaplayer.seekTo(randomseekto);
 
 		startAnswerTimer();
-        updateVisibleAnswerTags();
 	}
 	
 	//suggest an answer from the textarea
@@ -128,8 +129,7 @@
                     
                     if (checkAnswerTagsAllFound())
 					{		
-						document.getElementById("yougotit").innerHTML = "YOU GOT IT!";
-						document.getElementById("yougotit").style.visibility = "visible";
+						setResultMessage("THAT'S RIGHT!");
 					}
                     return;
 				}
@@ -149,8 +149,7 @@
                     
                     if (checkAnswerTagsAllFound())
 					{		
-						document.getElementById("yougotit").innerHTML = "YOU GOT IT!";
-						document.getElementById("yougotit").style.visibility = "visible";
+						setResultMessage("THAT'S RIGHT!");
 					}
                     return;
 				}
@@ -226,13 +225,23 @@
 			
            		if (!checkAnswerTagsAllFound())
            		{	
-					document.getElementById("yougotit").innerHTML = "YOU FAILED!";	
-					document.getElementById("yougotit").style.visibility = "visible";
+					setResultMessage("NOPE");	
 				}
 			}
 		}
 	}
 	
+    function setResultMessage(themessage)
+    {
+    	document.getElementById("resultmessage").innerHTML = themessage;	
+        if (themessage=="")
+        {
+        	document.getElementById("resultmessage").style.visibility = "hidden";			
+        }else{
+        	document.getElementById("resultmessage").style.visibility = "visible";
+        }
+    }
+    
 	//called when 2 sec pause between songs ends
 	function reachedPauseEnd()
 	{
@@ -296,7 +305,8 @@ th {
 
 
 	
-	
+
+
 
 <body>
 	<div align="center">
@@ -304,14 +314,14 @@ th {
 			<input type="submit" value="GO BACK" />
 		</form>
 
-		<p><div id="mediaplayer" style="width:0;height:0;border:0; border:none;"></div></p>
+		<p></p>
+
+		<div id="mediaplayer" style="width:0;height:0;border:0; border:none;"></div>
 
         <progress id="progressbar" value="15000" max="15000">
 		</progress>
 
 		<p><textarea rows="4" cols="50" id="textarea0" oninput="giveAnswer()"></textarea></p>
-
-		<font size=40 id="yougotit" style="visibility:hidden;">YOU GOT IT!</font>
 
 		<table class="fixed">
     		<col width="50px" />
@@ -325,7 +335,10 @@ th {
     			<td id="answertitletags"> </td>
 			</tr>
 		</table>
-
+		
+        <div class=container>
+			<font size=80 id="resultmessage" style="visibility:hidden;"></font>
+		</div>
 
 	</div>
 </body>
