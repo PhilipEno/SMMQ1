@@ -115,15 +115,16 @@
 						tagfound[i] = true;
 						addVisibleAnswerTag(tags[i]);
 						document.getElementById('textarea0').value = "";
+                        
+                        if (checkAnswerTagsAllFound())
+						{		
+							document.getElementById("yougotit").innerHTML = "YOU GOT IT!";
+							document.getElementById("yougotit").style.visibility = "visible";
+						}
+                        return;
 					}
 				}      
             }
-
-			if (checkAnswerTagsAllFound())
-			{
-				document.getElementById("yougotit").innerHTML = "YOU GOT IT!";
-				document.getElementById("yougotit").style.visibility = "visible";
-			}
 		}
 		
         //checks if all tags have been found
