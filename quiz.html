@@ -1,200 +1,199 @@
 <!DOCTYPE html>
 <html>
-	<script>
-		//youtube start shizzle
-		var yttag = document.createElement('script');
-		yttag.src = "https://www.youtube.com/iframe_api";
-		var firstScriptTag = document.getElementsByTagName('script')[0];
-		firstScriptTag.parentNode.insertBefore(yttag, firstScriptTag);
+<script>
+	//youtube start shizzle
+	var yttag = document.createElement('script');
+	yttag.src = "https://www.youtube.com/iframe_api";
+	var firstScriptTag = document.getElementsByTagName('script')[0];
+	firstScriptTag.parentNode.insertBefore(yttag, firstScriptTag);
+    
+	//global vars
+	var answertimer;
+	var pausetimer;
+	var mediaplayer;
+	var artisttags = []; //array of tags for artist name
+    var titletags =  []; //array of tags for song title 
+	var artisttagsfound = []; 
+    var titletagsfound  = [];
+	var timeleft;
+    
+	//function that loads on window start
+	window.onload = function()
+	{
+		newPuzzle();
+	};
+    
+	//function required by youtube api
+	function onYouTubeIframeAPIReady() 
+	{
+	}
+    
+	//start a new puzzle
+	function newPuzzle() 
+	{
+		timeleft = 15000;
+		document.getElementById("yougotit").style.visibility = "hidden";
         
-		//global vars
-		var answertimer;
-		var pausetimer;
-		var mediaplayer;
-		var tags = []; //array of tags
-		var tagfound = []; //array of tag founds
-		var timeleft;
-        
-		//function that loads on window start
-		window.onload = function()
+		//load all songs and select a random song
+		var rawFile = new XMLHttpRequest();			
+		rawFile.open("GET", "https://frankvdg.github.io/SMMQ1/playlist.txt", false);
+		rawFile.onreadystatechange = function() 
 		{
-			newPuzzle();
-		};
-        
-		//function required by youtube api
-		function onYouTubeIframeAPIReady() 
-		{
-		}
-        
-		//start a new puzzle
-		function newPuzzle() 
-		{
-			timeleft = 15000;
-			document.getElementById("tags").innerHTML = "";
-            document.getElementById("tagstest").innerHTML = "";
-			document.getElementById("yougotit").style.visibility = "hidden";
-            
-			//load all songs and select a random song
-			var rawFile = new XMLHttpRequest();			
-			rawFile.open("GET", "https://frankvdg.github.io/SMMQ1/playlist.txt", false);
-			rawFile.onreadystatechange = function() 
+			if(rawFile.readyState === 4) 
 			{
-				if(rawFile.readyState === 4) 
+				if(rawFile.status === 200 || rawFile.status == 0) 
 				{
-					if(rawFile.status === 200 || rawFile.status == 0) 
-					{
-						var allText = rawFile.responseText;
-						var songdata = allText.split('\n');
-						var numsongs = songdata.length / 4;
-						var randomselect = Math.floor((Math.random() * numsongs) + 0);
-						url  = songdata[randomselect*4 + 0];
-                       
-                        tags = [];
-                        tags = tags.concat ((songdata[randomselect*4 + 1]).toLowerCase().split(' '));
-						tags = tags.concat ((songdata[randomselect*4 + 2]).toLowerCase().split(' '));
-                        var numtags = tags.length;
-                        tagfound = [];
-                        for (var i = 0; i < numtags; i++) 
-            			{
-                        	tags[i] = tags[i].trim();   //remove whites from start and end
-                        	addVisibleAnswerTagTest (tags[i]);
-                            tagfound.push (false);
-                        }
-                         
-                
-						mediaplayer = new YT.Player('mediaplayer', {
-								height: '390',
-								width: '640',
-								videoId: url,	
-								playerVars: {
-								autoplay: 0,
-								controls: 0,
-								disablekb: 1,
-								hl: 'ru-ru',
-								loop: 0,
-								showinfo: 0,
-								autohide: 1,
-								rel: 0
-							},
-							events: {
-								'onReady': onPlayerReady,
-								'onStateChange': onPlayerStateChange
-							}
-						});
-					}
-        		}
-    		}
-    		rawFile.send(null);		            
-		}
-		
-		//called when youtube player has song loaded
-		function onPlayerReady(event) 
-		{         
-			mediaplayer.playVideo();
-	
-			//start song in random position
-			var randomseekto = Math.floor((Math.random() * 80) + 20);
-			mediaplayer.seekTo(randomseekto);
-
-			startAnswerTimer();
-		}
-		
-		//suggest an answer from the textarea
-		function giveAnswer() 
-		{
-			var currenttext = document.getElementById('textarea0').value;
-            currenttext = currenttext.toLowerCase().trim();
-            
-            var numtags = tags.length;
-			for (var i = 0; i < numtags; i++) 
-            {
- 				if (tagfound[i] == false)
-				{
-					if (currenttext == tags[i]) 
-					{
-						tagfound[i] = true;
-						addVisibleAnswerTag(tags[i]);
-						document.getElementById('textarea0').value = "";
-                        
-                        if (checkAnswerTagsAllFound())
-						{		
-							document.getElementById("yougotit").innerHTML = "YOU GOT IT!";
-							document.getElementById("yougotit").style.visibility = "visible";
+					var allText = rawFile.responseText;
+					var songdata = allText.split('\n');
+					var numsongs = songdata.length / 4;
+					var randomselect = Math.floor((Math.random() * numsongs) + 0);
+					url  = songdata[randomselect*4 + 0];
+                   
+                    tags = [];
+                    tags = tags.concat ((songdata[randomselect*4 + 1]).toLowerCase().split(' '));
+					tags = tags.concat ((songdata[randomselect*4 + 2]).toLowerCase().split(' '));
+                    
+                    tagfound = [];
+                    var numtags = tags.length;
+                    for (var i=0; i<numtags; i++) 
+        			{
+                    	tags[i] = tags[i].trim();   //remove whites from start and end
+                        tagfound.push (false);
+                    }
+                    
+					mediaplayer = new YT.Player('mediaplayer', {
+							height: '390',
+							width: '640',
+							videoId: url,	
+							playerVars: {
+							autoplay: 0,
+							controls: 0,
+							disablekb: 1,
+							hl: 'ru-ru',
+							loop: 0,
+							showinfo: 0,
+							autohide: 1,
+							rel: 0
+						},
+						events: {
+							'onReady': onPlayerReady,
+							'onStateChange': onPlayerStateChange
 						}
-                        return;
-					}
-				}      
-            }
+					});
+				}
+    		}
 		}
-		
-        //checks if all tags have been found
-        function checkAnswerTagsAllFound()
-        {
-        	var numtags = tags.length;
-            for (var i = 0; i < numtags; i++) 
-            {
-            	if (tagfound[i] == false)
-                {
-                	return false;
-                }
-            }
-            return true;
-        }
+		rawFile.send(null);		            
+	}
+	
+	//called when youtube player has song loaded
+	function onPlayerReady(event) 
+	{         
+		mediaplayer.playVideo();
+
+		//start song in random position
+		var randomseekto = Math.floor((Math.random() * 80) + 20);
+		mediaplayer.seekTo(randomseekto);
+
+		startAnswerTimer();
+        updateVisibleAnswerTags();
+	}
+	
+	//suggest an answer from the textarea
+	function giveAnswer() 
+	{
+		var currenttext = document.getElementById('textarea0').value;
+        currenttext = currenttext.toLowerCase().trim();
         
-		//this function adds a tag (thetag) to the found tags list
-		function addVisibleAnswerTag(thetag) 
-		{
-			var list = document.createElement('ul');
-			var item0 = document.createElement('li');
-			item0.appendChild(document.createTextNode(thetag));
-			list.appendChild(item0);
-			document.getElementById('tags').appendChild(list);
-		}
-        function addVisibleAnswerTagTest(thetag) 
-		{/*
-			var list = document.createElement('ul');
-			var item0 = document.createElement('li');
-			item0.appendChild(document.createTextNode(thetag));
-			list.appendChild(item0);
-			document.getElementById('tagstest').appendChild(list);*/
-		}
-		
-		//start the timer for answering period
-		function startAnswerTimer() 
-		{
-			answertimer = setInterval(answerTimerInterval, 10);
-			function answerTimerInterval() 
+		var numtags = tags.length;
+        for (var i=0; i<numtags; i++) 
+        {
+			if (tagfound[i] == false)
 			{
-				if (timeleft > 0) 
+				if (currenttext == tags[i]) 
 				{
-					timeleft-=10; 
-    		  		progressbar.value = timeleft;
-               	} else {
-    		  		clearInterval(answertimer);
-					mediaplayer.stopVideo();
-					mediaplayer.destroy();
-					pausetimer = setTimeout(reachedPauseEnd, 2000);
-				
-               		if (!checkAnswerTagsAllFound())
-               		{	
-						document.getElementById("yougotit").innerHTML = "YOU FAILED!";	
+					tagfound[i] = true;
+					updateVisibleAnswerTags();
+					document.getElementById('textarea0').value = "";
+                    
+                    if (checkAnswerTagsAllFound())
+					{		
+						document.getElementById("yougotit").innerHTML = "YOU GOT IT!";
 						document.getElementById("yougotit").style.visibility = "visible";
 					}
+                    return;
+				}
+			}      
+        }
+	}
+	
+    //checks if all tags have been found
+    function checkAnswerTagsAllFound()
+    {
+        var numtags = tags.length;
+        for (var i=0; i<numtags; i++) 
+        {
+        	if (tagfound[i] == false)
+            {
+            	return false;
+            }
+        }
+        return true;
+    }
+    
+	//show all found tags in answertable
+	function updateVisibleAnswerTags() 
+	{
+		var foundtags = "";
+        var numtags = tags.length;
+        for (var i=0; i<numtags; i++) 
+        {
+        	if (tagfound[i] == true)
+            {
+            	foundtags += tags[i];
+                foundtags += " ";
+            }
+        }
+        document.getElementById("answerartisttags").innerHTML = foundtags;
+        document.getElementById("answertitletags").innerHTML = foundtags;
+	}
+	
+	//start the timer for answering period
+	function startAnswerTimer() 
+	{
+		answertimer = setInterval(answerTimerInterval, 10);
+		function answerTimerInterval() 
+		{
+			if (timeleft > 0) 
+			{
+				timeleft-=10; 
+		  		progressbar.value = timeleft;
+           	} else {
+		  		clearInterval(answertimer);
+				mediaplayer.stopVideo();
+				mediaplayer.destroy();
+				pausetimer = setTimeout(reachedPauseEnd, 2000);
+			
+           		if (!checkAnswerTagsAllFound())
+           		{	
+					document.getElementById("yougotit").innerHTML = "YOU FAILED!";	
+					document.getElementById("yougotit").style.visibility = "visible";
 				}
 			}
 		}
-		
-		//called when 2 sec pause between songs ends
-		function reachedPauseEnd()
-		{
-			newPuzzle();
-		}
-		
-		//required by youtube?
-		function onPlayerStateChange(event) 
-		{
-		}
-	</script>
+	}
+	
+	//called when 2 sec pause between songs ends
+	function reachedPauseEnd()
+	{
+		newPuzzle();
+	}
+	
+	//required by youtube?
+	function onPlayerStateChange(event) 
+	{
+	}
+</script>
 
 
 
@@ -204,55 +203,80 @@
 
 
 
-	<style>
-		body {
-			background-color: #CDC5B0;
-		}
-		h1 {
-			color: black;
-			text-align: center;
-			font-family: verdana;
-		}
-		p {
-			text-align: center;
-			font-family: verdana;
-			font-size: 20px;
-		}
-		.container {
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			-moz-transform: translateX(-50%) translateY(-50%);
-			-webkit-transform: translateX(-50%) translateY(-50%);
-			transform: translateX(-50%) translateY(-50%);
-		}
-
-	</style>
+<style>
+body {
+	background-color: #CDC5B0;
+}
+h1 {
+	color: black;
+	text-align: center;
+	font-family: verdana;
+}
+p {
+	text-align: center;
+	font-family: verdana;
+	font-size: 20px;
+}
+.container {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	-moz-transform: translateX(-50%) translateY(-50%);
+	-webkit-transform: translateX(-50%) translateY(-50%);
+	transform: translateX(-50%) translateY(-50%);
+}
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 50%;
+}
+td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+    //background-color: #dddddd;
+}
+th {
+    border: 1px solid #dddddd;
+    text-align: right;
+    padding: 8px;
+    background-color: #dddddd;
+}
+</style>
 
 
 	
 	
 
-	<body>
-		<div align="center">
-			<form action="index.html">
-				<input type="submit" value="GO BACK" />
-			</form>
+<body>
+	<div align="center">
+		<form action="index.html">
+			<input type="submit" value="GO BACK" />
+		</form>
 
-			<p><div id="mediaplayer" style="width:0;height:0;border:0; border:none;"></div></p>
+		<p><div id="mediaplayer" style="width:0;height:0;border:0; border:none;"></div></p>
 
-            <progress id="progressbar" value="15000" max="15000">
-			</progress>
+        <progress id="progressbar" value="15000" max="15000">
+		</progress>
 
-			<p><textarea rows="4" cols="50" id="textarea0" oninput="giveAnswer()"></textarea></p>
+		<p><textarea rows="4" cols="50" id="textarea0" oninput="giveAnswer()"></textarea></p>
 
-			<font size=40 id="yougotit" style="visibility:hidden;">YOU GOT IT!</font>
+		<font size=40 id="yougotit" style="visibility:hidden;">YOU GOT IT!</font>
 
-			<p></p>
-			<p><div id="tags"></div></p>
-            <p></p>
-			<p><div id="tagstest"></div></p>
+		<table class="fixed">
+    		<col width="50px" />
+    		<col width="100px" />
+			<tr>
+				<th>Artist</th>
+				<td id="answerartisttags"> </td>
+			</tr>
+			<tr>
+  				<th>Title</th>
+    			<td id="answertitletags"> </td>
+			</tr>
+		</table>
 
-		</div>
-	</body>
+
+	</div>
+</body>
 </html>
