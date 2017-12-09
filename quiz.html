@@ -1,5 +1,124 @@
 <!DOCTYPE html>
 <html>
+<style>
+body {
+	background-color: #CDC5B0;
+}
+div { 
+	middle:0; 
+	text-align:center; 
+} 
+.container {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	-moz-transform: translateX(-50%) translateY(-50%);
+	-webkit-transform: translateX(-50%) translateY(-50%);
+	transform: translateX(-50%) translateY(-50%);
+}
+table.table1 {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 400px;
+    margin: auto;
+}
+table.table1 td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+table.table1 th {
+    border: 1px solid #dddddd;
+    text-align: right;
+    padding: 8px;
+    background-color: #dddddd;
+}
+table.table2 {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 500px;
+    position: relative;
+    top: 50px;
+	margin: auto;
+    empty-cells:show;
+}
+table.table2 tr {
+	height: 25px;
+}
+table.table2 td {
+    border: 1px solid #000000;
+    text-align: left;
+}
+table.table2 th {
+    border: 1px solid #000000;
+    text-align: left;
+    background-color: #dddddd;
+}
+.resultmessage {
+	position: relative;
+    top: 50px;
+    font-size: 600%;
+}
+</style>
+
+
+	
+
+
+
+<body>
+	<div>
+		<form action="index.html">
+			<input type="submit" value="GO BACK" />
+		</form>
+
+		<p></p>
+
+		<div id="mediaplayer" style="width:0;height:0;border:0; border:none;"></div>
+
+        <progress id="progressbar" value="15000" max="15000">
+		</progress>
+
+		<p><textarea rows="4" cols="50" id="textarea0" oninput="giveAnswer()"></textarea></p>
+	
+    	<table class="table1">
+	    	<col width="50px" />
+	    	<col width="100px" />
+			<tr>
+				<th>Artist</th>
+				<td id="answerartisttags"> </td>
+			</tr>
+			<tr>
+	  			<th>Title</th>
+	    		<td id="answertitletags"> </td>
+			</tr>
+		</table>
+    
+		<table class="table2" id="songhistory">
+	    	<col width="235px"/>
+	    	<col width="235px"/>
+	        <col width="30px"/>
+			<tr> <td> </td>	<td> </td> <td> </td> </tr>
+	        <tr> <td> </td>	<td> </td> <td> </td> </tr>
+        	<tr> <td> </td>	<td> </td> <td> </td> </tr>
+        	<tr> <td> </td>	<td> </td> <td> </td> </tr>
+        	<tr> <td> </td>	<td> </td> <td> </td> </tr>
+        	<tr> <td> </td>	<td> </td> <td> </td> </tr>
+        	<tr> <td> </td>	<td> </td> <td> </td> </tr>
+        	<tr> <td> </td>	<td> </td> <td> </td> </tr>
+        	<tr> <td> </td>	<td> </td> <td> </td> </tr>
+        	<tr> <td> </td>	<td> </td> <td> </td> </tr>
+		</table>
+
+		<div class=resultmessage id="resultmessage" style="visibility:hidden;"></div>
+	</div>
+        
+</body>
+
+
+
+
+
 <script>
 	//youtube start shizzle
 	var yttag = document.createElement('script');
@@ -16,6 +135,7 @@
 	var artisttagsfound = []; 
     var titletagsfound  = [];
 	var timeleft;
+    var songhistorycounter = 0;
     
 	//function that loads on window start
 	window.onload = function()
@@ -215,7 +335,7 @@
 		{
 			if (timeleft > 0) 
 			{
-				timeleft-=10; 
+				timeleft-=100; 
 		  		progressbar.value = timeleft;
            	} else {
 		  		clearInterval(answertimer);
@@ -242,10 +362,41 @@
         }
     }
     
+    function addCurrentSongToHistory()
+    {
+		var text0 = "";
+        for (var i=0;i<artisttags.length;i++)
+        {
+        	text0 += artisttags[i];
+            text0 += " ";
+        }
+        var text1 = "";
+        for (var i=0;i<titletags.length;i++)
+        {
+        	text1 += titletags[i];
+            text1 += " ";
+        }
+        var text2 = "0pt";
+        if (checkAnswerTagsAllFound())
+        {
+        	text2 = "1pt";
+        }
+
+		var tr = document.getElementById("songhistory").getElementsByTagName("tr");
+		tr[songhistorycounter].getElementsByTagName("td")[0].innerHTML = text0;
+        tr[songhistorycounter].getElementsByTagName("td")[1].innerHTML = text1;
+        tr[songhistorycounter].getElementsByTagName("td")[2].innerHTML = text2;
+        songhistorycounter++;
+    }
+    
 	//called when 2 sec pause between songs ends
 	function reachedPauseEnd()
 	{
-		newPuzzle();
+    	addCurrentSongToHistory();
+		if (songhistorycounter<10)
+        {
+        	newPuzzle();	
+		}
 	}
 	
 	//required by youtube?
@@ -256,90 +407,4 @@
 
 
 
-
-
-
-
-
-
-<style>
-body {
-	background-color: #CDC5B0;
-}
-h1 {
-	color: black;
-	text-align: center;
-	font-family: verdana;
-}
-p {
-	text-align: center;
-	font-family: verdana;
-	font-size: 20px;
-}
-.container {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	-moz-transform: translateX(-50%) translateY(-50%);
-	-webkit-transform: translateX(-50%) translateY(-50%);
-	transform: translateX(-50%) translateY(-50%);
-}
-table {
-    font-family: arial, sans-serif;
-    border-collapse: collapse;
-    width: 400px;
-}
-td {
-    border: 1px solid #dddddd;
-    text-align: left;
-    padding: 8px;
-    //background-color: #dddddd;
-}
-th {
-    border: 1px solid #dddddd;
-    text-align: right;
-    padding: 8px;
-    background-color: #dddddd;
-}
-</style>
-
-
-	
-
-
-
-<body>
-	<div align="center">
-		<form action="index.html">
-			<input type="submit" value="GO BACK" />
-		</form>
-
-		<p></p>
-
-		<div id="mediaplayer" style="width:0;height:0;border:0; border:none;"></div>
-
-        <progress id="progressbar" value="15000" max="15000">
-		</progress>
-
-		<p><textarea rows="4" cols="50" id="textarea0" oninput="giveAnswer()"></textarea></p>
-
-		<table class="fixed">
-    		<col width="50px" />
-    		<col width="100px" />
-			<tr>
-				<th>Artist</th>
-				<td id="answerartisttags"> </td>
-			</tr>
-			<tr>
-  				<th>Title</th>
-    			<td id="answertitletags"> </td>
-			</tr>
-		</table>
-		
-        <div class=container>
-			<font size=80 id="resultmessage" style="visibility:hidden;"></font>
-		</div>
-
-	</div>
-</body>
 </html>
